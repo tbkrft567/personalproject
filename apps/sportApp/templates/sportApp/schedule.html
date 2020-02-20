@@ -1,0 +1,194 @@
+<!doctype html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <title>Schedule</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <style>
+        .wrapper{
+            width: 550px;
+            border: 2px solid black;
+        }
+    </style>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+
+<body>
+    <div class="Header">
+        <img src="/static/images/{{ teamInfo.image_tag }}" alt="{{ teamInfo.team_name }}">
+        <p>Current Team: {{ teamInfo.team_name }}</p>
+        <p>Ability: {{ teamInfo.ability }}</p>
+        <form action="/refreshSchedule" method="POST">
+            {% csrf_token %}
+            <select name="teamId">
+                {% for team in Teams %}
+                <option value="{{ team.team_num }}">{{ team.team_name }}</option>
+                {% endfor %}
+            </select>
+            <input type="submit" value="Refresh">
+        </form>
+        <a href="/Homepage">Homepage</a>
+
+    </div>
+    <div class="wrapper">
+        <table class="table">
+            <thead>
+                <tr>
+                    <td>@indicator</td>
+                    <td>TeamIcon</td>
+                    <td>OpponentName</td>
+                    <td>Ability</td>
+                    <td>Result</td>
+                </tr>
+            </thead>
+            <tbody>
+                {% for Match in Schedule %}
+                {% if Match.home_team == teamId or Match.away_team == teamId %}
+                <tr>
+                    <td>
+                        {% if Match.home_team != teamId %}
+                        <p>@</p>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if Match.home_team == teamId %}
+                        {% for team in Teams %}
+                        {% if Match.away_team == team.team_num %}
+                        <img src="/static/images/{{ team.image_tag }}" alt="{{ team.team_name }}">
+                        {% endif %}
+                        {% endfor %}
+                        {% else %}
+                        {% for team in Teams %}
+                        {% if Match.home_team == team.team_num %}
+                        <img src="/static/images/{{ team.image_tag }}" alt="{{ team.team_name }}">
+                        {% endif %}
+                        {% endfor %}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if Match.home_team == teamId %}
+                        {% for team in Teams %}
+                        {% if Match.away_team == team.team_num %}
+                        <p>{{ team.team_name }}</p>
+                        {% endif %}
+                        {% endfor %}
+                        {% else %}
+                        {% for team in Teams %}
+                        {% if Match.home_team == team.team_num %}
+                        <p>{{ team.team_name }}</p>
+                        {% endif %}
+                        {% endfor %}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if Match.home_team == teamId %}
+                        {% for team in Teams %}
+                        {% if Match.away_team == team.team_num %}
+                        <p>{{ team.ability }}</p>
+                        {% endif %}
+                        {% endfor %}
+                        {% else %}
+                        {% for team in Teams %}
+                        {% if Match.home_team == team.team_num %}
+                        <p>{{ team.ability }}</p>
+                        {% endif %}
+                        {% endfor %}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if Match.home_team == teamId %}
+                        <p>{%if Match.result == 0 %}W {%elif Match.result == 1%}L {%else%}T {%endif%}
+                            {{ Match.home_score }}-{{ Match.away_score }}
+                        </p>
+                        {% else %}
+                        <p>{%if Match.result == 0 %}L {%elif Match.result == 1%}W {%else%}T {%endif%}
+                            {{ Match.away_score }}-{{ Match.home_score }}
+                        </p>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
+
+<!-- <tr>
+    <td><img src="{% static 'images/astronaut.jpg' %}" alt="astronaut"></td>
+    <td>@indicator</td>
+    <td>OpponentName</td>
+    <td>W/L #-#</td>
+</tr>
+<tr>
+    <td><img src="{% static 'images/bulldog.gif' %}" alt="bulldog"></td>
+    <td>@indicator</td>
+    <td>OpponentName</td>
+    <td>W/L #-#</td>
+</tr>
+<tr>
+    <td><img src="{% static 'images/fighterPlane.png' %}" alt="fighterPlane"></td>
+    <td>@indicator</td>
+    <td>OpponentName</td>
+    <td>W/L #-#</td>
+</tr>
+<tr>
+    <td><img src="{% static 'images/killerWhale.jpg' %}" alt="killerWhale"></td>
+    <td>@indicator</td>
+    <td>OpponentName</td>
+    <td>W/L #-#</td>
+</tr>
+<tr>
+    <td><img src="{% static 'images/lion2.jpg' %}" alt="lion2"></td>
+    <td>@indicator</td>
+    <td>OpponentName</td>
+    <td>W/L #-#</td>
+</tr>
+<tr>
+    <td><img src="{% static 'images/penguin.jpg' %}" alt="penguin"></td>
+    <td>@indicator</td>
+    <td>OpponentName</td>
+    <td>W/L #-#</td>
+</tr>
+<tr>
+    <td><img src="{% static 'images/raiders.jpg' %}" alt="raiders"></td>
+    <td>@indicator</td>
+    <td>OpponentName</td>
+    <td>W/L #-#</td>
+</tr>
+<tr>
+    <td><img src="{% static 'images/scorpion.jpg' %}" alt="scorpion"></td>
+    <td>@indicator</td>
+    <td>OpponentName</td>
+    <td>W/L #-#</td>
+</tr>
+<tr>
+    <td><img src="{% static 'images/viper.jpg' %}" alt="viper"></td>
+    <td>@indicator</td>
+    <td>OpponentName</td>
+    <td>W/L #-#</td>
+</tr>
+<tr>
+    <td><img src="{% static 'images/tiger.png' %}" alt="tigers"></td>
+    <td>@indicator</td>
+    <td>OpponentName</td>
+    <td>W/L #-#</td>
+</tr> -->

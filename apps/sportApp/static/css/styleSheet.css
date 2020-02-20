@@ -1,0 +1,20 @@
+.header h2{
+    display: inline-block;
+    width: 300px
+}
+
+.menu{
+    border: 5px solid black;
+    /* margin: 3% 50% 0% 10%; */
+    margin: 25px 0px 50px 450px;
+    text-align: center;
+    width: 600px;
+    background-image: url("/static/images/lawnBackground.jpg");
+}
+
+.menu input{
+    margin: 5px;
+    padding: 10px;
+    width: 400px;
+    border-radius: 50px;
+}

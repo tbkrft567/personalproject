@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+   <title>Roster</title>
+   <!-- Required meta tags -->
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+   <style>
+      .wrapper{
+         width: 400px;
+         border: 2px solid black
+      }
+   </style>
+   <!-- Bootstrap CSS -->
+   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+
+<body>
+   <div class="Header">
+      {% if teamId == 0 %}
+         <h1>All Player</h1>
+         <br>
+         <br>
+         <br>
+      {% else %}
+         {% for team in teamInfo %}
+         <img src="/static/images/{{ team.image_tag }}" alt="{{ team.team_name }}">
+         <p>Current Team: {{ team.team_name }}</p>
+         <p>Ability: {{ team.ability }}</p>
+         {% endfor %}
+      {% endif %}
+      <form action="/refreshRoster" method="POST">
+         {% csrf_token %}
+         <select name="teamId">
+            <option value="0">All Players</option>
+            {% for team in Teams %}
+            <option value="{{ team.team_num }}">{{ team.team_name }}</option>
+            {% endfor %}
+         </select>
+         <input type="submit" value="Refresh">
+      </form>
+      <a href="/Homepage">Homepage</a>
+
+   </div>
+   <div class="wrapper">
+      <table class='table'>
+         <thead>
+            <tr>
+               <th>Team Name</th>
+               <th>Year</th>
+               <th>Ability</th>
+            </tr>
+         </thead>
+         <tbody>
+            {% if teamId == 0 %}
+            {% for player in roster %}
+               <tr>
+                  <td>{{ player.team.team_name }}</td>
+                  <td>{{ player.year }}</td>
+                  <td>{{ player.ability }}</td>
+               </tr>
+            {% endfor %}
+            {% else %}
+               {% for player in roster %}
+                  {% if player.team.team_num == teamId %}
+                     <tr>
+                        <td>{{ player.team.team_name }}</td>
+                        <td>{{ player.year }}</td>
+                        <td>{{ player.ability }}</td>
+                     </tr>
+                  {% endif %}
+            {% endfor %}
+            {% endif %}
+         </tbody>
+      </table>
+   </div>
+
+   <!-- Optional JavaScript -->
+   <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+      crossorigin="anonymous"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+      integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+      crossorigin="anonymous"></script>
+   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+      integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+      crossorigin="anonymous"></script>
+</body>
+
+</html>
